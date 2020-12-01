@@ -1,2 +1,3 @@
 # stunning-giggle
-Learning how to use python and github.
+This repo is designed for learning how to use github.
+Please ignore it if you see this. Thanks!
