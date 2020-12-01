@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+	<head>
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta charset="UTF-8">
+		<title>欢迎来到后花园！</title>
+		<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+		<meta http-equiv="x-dns-prefetch-control" content="on">
+		<link rel="dns-prefetch" href="//cdn.jsdelivr.net">
+		<script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js"></script>
+		<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+		<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/js/bootstrap.min.js"></script>
+		<link rel="stylesheet" id="saukra_css-css" href="https://cdn.jsdelivr.net/gh/mashirozx/Sakura@3.3.8/style.min.css" type="text/css" media="all"/>
+		<link href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+		<script src="https://cdn.jsdelivr.net/npm/aplayer@1.10.1/dist/APlayer.min.js"></script>
+		<script src="https://cdn.jsdelivr.net/npm/hls.js/dist/hls.min.js"></script>
+		<script src="https://cdn.jsdelivr.net/npm/color-thief-don@2.0.2/src/color-thief.js"></script>
+		<link href="https://cdn.jsdelivr.net/npm/aplayer@1.10.1/dist/APlayer.min.css" rel="stylesheet" type="text/css">
+	</head>
+	<body bgcolor="rgb(255,20,147)" style="padding-top: 60px">
+		<!--nav bar-->
+		<nav class="navbar fixed-top navbar-expand-lg navbar-dark bg-dark no-select"> <a class="navbar-brand" href="#">欢迎来到后花园</a>
+			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent1" aria-controls="navbarSupportedContent1" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
+			<div class="collapse navbar-collapse" id="navbarSupportedContent1">
+				<ul class="navbar-nav mr-auto">
+					<li class="nav-item active"><a class="nav-link" href="#">主页<span class="sr-only">(当前页面)</span></a></li>
+					<li class="nav-item dropdown"><a class="nav-link dropdown-toggle" href="#" id="navbarDropdown1" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">好玩的</a>
+						<div class="dropdown-menu" aria-labelledby="navbarDropdown1">
+							<a class="dropdown-item" href="3DCEList/index.html">3D元素周期表</a>
+							<a class="dropdown-item" href="Cat/index.html">抓小猫</a>
+							<a class="dropdown-item" href="SteamLicense/index.html">Steam许可证排版器</a>
+							<div class="dropdown-divider"></div>
+							<a class="dropdown-item" href="https://indlut.cn/" target="_blank">不可见之物</a>
+							<a class="dropdown-item" href="https://support.qq.com/product/288441">联系我</a>
+						</div>
+					</li>
+					<li class="nav-item"><a class="nav-link" href="about.html">关于我</a></li>
+				</ul>
+			</div>
+		</nav>
+		<!--nav end, body start-->
+		<div class="jumbotron">
+			<div class="container">
+				<h1 class="display-4">欢迎光临！</h1>
+			</div>
+		</div>
+		<p>Welcome!!!咕噜咕噜</p>
+		<footer class="jumbotron">
+			<div class="container">
+				<h1>这是页脚的测试哦</h1>
+				<div id="aplayer">
+					<script>
+						const ap = new APlayer({
+							container: document.getElementById('aplayer'),
+							autoplay: 'true',
+							loop: 'true',
+							order: 'random',
+							preload: 'metadata',
+							listFolded: 'true',
+							audio: [{
+								name: '商店bgm',
+								artist: '同步音律喵赛克',
+								url: 'https://oss.indlut.cn/storage/music/shop_bgm.mp3',
+								cover: 'img/cover1.png'
+							},
+							{
+								name: 'bgm07',
+								artist: '女装学园（妊）',
+								url: 'https://oss.indlut.cn/storage/music/bgm07.mp3',
+								cover: 'img/cover2.jpg'
+							},
+							{
+								name: 'bgm',
+								artist: '中国式家长',
+								url: 'https://oss.indlut.cn/storage/music/AudioClip/bgm.mp3',
+								cover: 'img/cover3.jpg'
+							},
+							{
+								name: 'brithday',
+								artist: '中国式家长',
+								url: 'https://oss.indlut.cn/storage/music/AudioClip/brithday.mp3',
+								cover: 'img/cover4.jpg'
+							}]
+						});
+						const colorThief = new ColorThief();
+						const image = new Image();
+						const xhr = new XMLHttpRequest();
+						const setTheme = (index) => {
+							if (!ap.list.audios[index].theme) {
+								xhr.onload = function(){
+									let coverUrl = URL.createObjectURL(this.response);
+									image.onload = function(){
+										let color = colorThief.getColor(image);
+										ap.theme(`rgb(${color[0]}, ${color[1]}, ${color[2]})`, index);
+										URL.revokeObjectURL(coverUrl)
+									};
+									image.src = coverUrl;
+								}
+								xhr.open('GET', ap.list.audios[index].cover, true);
+								xhr.responseType = 'blob';
+								xhr.send();
+							}
+						};
+						setTheme(ap.list.index);
+						ap.on('listswitch', (index) => {
+							setTheme(index);
+						});
+					</script>
+				</div>
+			</div>
+		</footer>
+	</body>
+</html>

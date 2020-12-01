@@ -1,0 +1,276 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="theme-color" content="#E64A19">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="dns-prefetch" href="//cdn.jsdelivr.net">
+	<title>Steam License Parser</title>
+		<meta http-equiv="x-dns-prefetch-control" content="on">
+		<link rel="dns-prefetch" href="//cdn.jsdelivr.net">
+		<script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js"></script>
+		<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+		<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/js/bootstrap.min.js"></script>
+		<link rel="stylesheet"
+			  id="saukra_css-css"
+			  href="https://cdn.jsdelivr.net/gh/mashirozx/Sakura@3.3.8/style.min.css"
+			  type="text/css"
+			  media="all"/>
+		<link href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/css/bootstrap.css" rel="stylesheet" type="text/css">
+	<style type="text/css">
+		th[role=columnheader]:not(.no-sort) {
+			cursor: pointer;
+		}
+
+		th[role=columnheader]:not(.no-sort):after {
+			content: '';
+			float: right;
+			margin-top: 7px;
+			border-width: 0 4px 4px;
+			border-style: solid;
+			border-color: #404040 transparent;
+			visibility: hidden;
+			opacity: 0;
+			-ms-user-select: none;
+			-webkit-user-select: none;
+			-moz-user-select: none;
+			user-select: none;
+		}
+
+		th[aria-sort=ascending]:not(.no-sort):after {
+			border-bottom: none;
+			border-width: 4px 4px 0;
+		}
+
+		th[aria-sort]:not(.no-sort):after {
+			visibility: visible;
+			opacity: 0.4;
+		}
+
+		th[role=columnheader]:not(.no-sort):hover:after {
+			visibility: visible;
+			opacity: 1;
+		}
+	</style>
+</head>
+<body>
+	<nav class="navbar navbar-expand-lg navbar-dark bg-dark no-select"> <a class="navbar-brand" href="#">花园节目</a>
+	<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent1" aria-controls="navbarSupportedContent1" aria-expanded="false" aria-label="Toggle navigation">
+		<span class="navbar-toggler-icon"></span>
+		</button>
+		<div class="collapse navbar-collapse" id="navbarSupportedContent1">
+		<ul class="navbar-nav mr-auto">
+			<li class="nav-item" id="home">
+				<a class="nav-link" href="/index.html" target="_top">主页</a>
+			</li>
+			<li class="nav-item dropdown">
+				<a class="nav-link dropdown-toggle" href="#" id="funny" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">好玩的</a>
+				<div class="dropdown-menu" aria-labelledby="funny">
+					<a class="dropdown-item" href="/3DCEList/index.html">3D元素周期表</a>
+					<a class="dropdown-item" href="/Cat/index.html">抓小猫</a>
+					<a class="dropdown-item" href="/SteamLicense/index.html">Steam许可证排版器</a>
+					<div class="dropdown-divider"></div>
+					<a class="dropdown-item" href="https://indlut.cn/" target="_blank">不可见之物</a>
+					<a class="dropdown-item" href="https://support.qq.com/product/288441">联系我</a>
+				</div>
+			</li>
+			<li class="nav-item" id="about">
+				<a class="nav-link" href="/about.html" target="_top">关于我</a>
+			</li>
+		</ul>
+		</div>
+	</nav>
+	<div class="jumbotron">
+		<div class="container">
+			<h1 class="display-4">Steam 许可证美化排版</h1>
+		</div>
+	</div>	
+	<div class="container container-main">
+		<textarea class="form-control" id="licenses" rows="12" autofocus required placeholder="在这里输入你的许可证。请放心，数据只存储在你的浏览器里，不会发布到网络上。"></textarea>
+		<button type="button" id="licenses-button" class="btn btn-lg btn-block btn-primary mt-3">Go!</button>
+		
+		<div class="card mt-3" id="licenses-output">
+			<div class="card-header">这个怎么用？</div>
+			<div class="card-body">
+				<ol class="pl-4 mb-0">
+					<li><a href="steam://open/console/">打开Steam控制台</a></li>
+					<li>输入 <code class="text-light bg-warning">clear_console</code></li>
+					<li>输入 <code class="text-light bg-success">licenses_print</code></li>
+					<li>复制屏幕上的内容<i class="muted">(右键单击, select all, copy)</i></li>
+					<li>把复制的内容粘贴到上面</li>
+				</ol>
+			</div>
+		</div>
+		<div class="card mt-3">
+			<div class="card-header">许可证条目太多了？</div>
+			<div class="card-body">
+				<p>通过使用<a href="https://developer.valvesoftware.com/wiki/SteamCMD">SteamCMD</a>可以解决这个问题。</p>
+				<p>首先，你需要下载并登录。</p>
+				<p>完成之后，你可以通过输入这条命令将输出结果保存到一个文本文档里面:</p>
+				<code>steamcmd +login YOUR_ACCOUNT +licenses_print +quit </code><code>&gt;</code><code> licenses.txt</code>
+			</div>
+		</div>
+	</div>
+	<script>
+	(function()
+	{
+		const licenseInput  = document.getElementById( 'licenses' ),
+			licenseOutput = document.getElementById( 'licenses-output' ),
+			entityMap =
+			{
+				"&": "&amp;",
+				"<": "&lt;",
+				">": "&gt;",
+				'"': '&quot;',
+				"'": '&#39;',
+				"/": '&#x2F;'
+			};
+		
+		function escapeHtml(string)
+		{
+			return String(string).replace(/[&<>"'\/]/g, (s) => entityMap[s]);
+		}
+		
+		document.getElementById( 'licenses-button' ).addEventListener( 'click', () =>
+		{
+			let i = 0,
+				line,
+				info_line,
+				textArray = licenseInput.value.split( '\n' ),
+				length = textArray.length,
+				very_nice_data_you_have_there = [],
+				purchase_type_counts = {},
+				purchase_location_counts = {};
+			
+			for( i = 0; i < length; i++ )
+			{
+				line = textArray[ i ];
+				
+				if( line.substring( 0, 8 ) !== 'License ' )
+				{
+					continue;
+				}
+				
+				if( i + 2 > length )
+				{
+					break;
+				}
+				
+				line = line.match( /License packageID ([0-9]+)/ );
+				info_line = textArray[ i + 1 ].match( /^ - State\s*: (.+?)\( flags \d+? \) - Purchased : (.+?) in "(.*)", (.+?)$/ );
+				
+				if( line && info_line )
+				{
+					very_nice_data_you_have_there.push({
+						sub: parseInt(line[ 1 ], 10),
+						state: info_line[ 1 ],
+						purchase_date: new Date(info_line[ 2 ]),
+						purchase_location: info_line[ 3 ],
+						purchase_type: info_line[ 4 ],
+					});
+					
+					if( !purchase_type_counts[ info_line[ 4 ] ] )
+					{
+						purchase_type_counts[ info_line[ 4 ] ] = 0;
+					}
+					
+					purchase_type_counts[ info_line[ 4 ] ] += 1;
+					
+					if( !purchase_location_counts[ info_line[ 3 ] ] )
+					{
+						purchase_location_counts[ info_line[ 3 ] ] = 0;
+					}
+					
+					purchase_location_counts[ info_line[ 3 ] ] += 1;
+				}
+			}
+			
+			if( very_nice_data_you_have_there.length === 0 )
+			{
+				licenseOutput.className = 'lead mt-4 text-center';
+				licenseOutput.innerText = '没有找到许可证';
+			}
+			else
+			{
+				licenseOutput.className = 'mt-4';
+				licenseOutput.innerHTML = `
+				<div class="row">
+					<div class="col-md-6">
+						<h3>Purchase locations</h3>
+						<table class="table">
+							<thead class="thead-default">
+								<tr>
+									<th>地点</th>
+									<th>数量</th>
+								</tr>
+							</thead>
+							<tbody>
+								${Object.keys(purchase_location_counts).sort((a, b) =>
+									purchase_location_counts[b] - purchase_location_counts[a]
+								).map((key) =>
+									`<tr>
+										<td>${(key ? escapeHtml(key) : '(empty)')}</td>
+										<td>${purchase_location_counts[ key ]}</td>
+									</tr>`
+								).join("")}
+							</tbody>
+						</table>
+					</div>
+					<div class="col-md-6">
+						<h3>购买方式</h3>
+						<table class="table">
+							<thead class="thead-default">
+								<tr>
+									<th>种类</th>
+									<th>数量</th>
+								</tr>
+							</thead>
+							<tbody>
+								${Object.keys(purchase_type_counts).sort((a, b) =>
+									purchase_type_counts[b] - purchase_type_counts[a]
+								).map((key) =>
+									`<tr>
+										<td>${escapeHtml(key)}</td>
+										<td>${purchase_type_counts[ key ]}</td>
+									</tr>`
+								).join("")}
+							</tbody>
+						</table>
+					</div>
+				</div>
+				
+				<h3>订阅数</h3>
+				<p>你有${very_nice_data_you_have_there.length}个游戏，很棒！</p>
+				<table class="table table-striped" id="js-table-licenses">
+					<thead class="thead-default">
+						<tr>
+							<th>SubID</th>
+							<th>状态</th>
+							<th class="sort-default sort-down">购买时间</th>
+							<th>购买地点</th>
+							<th>购买方式</th>
+						</tr>
+					</thead>
+					<tbody>
+						${very_nice_data_you_have_there.map((item) =>
+							`<tr>
+								<td><a href="https://steamdb.info/sub/${item.sub}/">${item.sub}</a></td>
+								<td>${escapeHtml(item.state)}</td>
+								<td data-sort="${item.purchase_date.getTime()}">${item.purchase_date.toLocaleString()}</td>
+								<td>${escapeHtml(item.purchase_location)}</td>
+								<td>${escapeHtml(item.purchase_type)}</td>
+							</tr>`
+						).join("")}
+					</tbody>
+				</table>`;
+				
+				new Tablesort( document.getElementById( 'js-table-licenses' ) );
+			}
+		}, false );
+	}());
+	</script>
+	<script src="https://cdn.jsdelivr.net/npm/tablesort@5.2.1/src/tablesort.min.js"></script>
+	<p></p>
+</body>
+</html>
