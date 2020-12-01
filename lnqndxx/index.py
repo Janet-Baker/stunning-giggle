@@ -15,6 +15,7 @@ head = {
     'Accept-Language': 'zh-cn'
 }
 cookie = {'BDed_HeaderKey': 'C2YDAywMRQYDAWN4UBNiMS5Cfi9fJFByDHwIUDjQmNaBuN7W7fXQ7dE%3D'}
+SCKEY = "SCU89769T812774cc47f0ebf9d6514c862699bc5a5e6f4a6d40825"
 
 
 # 检查当前学习
@@ -39,7 +40,8 @@ def addlearnlog(res_decoded):
     result_decoded = json.loads(str(result.text))
     print(result_decoded)
     # 以下是serverChan服务的发送内容。
-    serverchan = 'https://sc.ftqq.com/SCU89769T812774cc47f0ebf9d6514c862699bc5a5e6f4a6d40825.send'
+    global SCKEY
+    serverchan = "https://sc.ftqq.com/" + SCKEY + ".send"
     kw = {
         'text': result_decoded['msg'],
         'desp': str(
