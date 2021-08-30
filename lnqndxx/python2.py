@@ -10,12 +10,12 @@ head = {
     'Content-Type': 'application/x-www-form-urlencoded',
     'Host': 'api.lngqt.shechem.cn',
     'Connection': 'keep-alive',
-    'User-Agent': 'Mozilla/5.0 (iPad; CPU OS 13_4_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148 MicroMessenger/7.0.18(0x1700122c) NetType/WIFI Language/zh_CN',
+    'User-Agent': '',
     'Referer': 'http://websecond.lngqt.shechem.cn/study',
     'Accept-Language': 'zh-cn'
 }
-cookie = {'BDed_HeaderKey': 'C2YDAywMRQYDAWN4UBNiMS5Cfi9fJFByDHwIUDjQmNaBuN7W7fXQ7dE%3D'}
-key = "SCT2724TH3hvvQpXvCU3xRO9fwbgspOk"
+cookie = {'BDed_HeaderKey': ''}
+sckey = ""
 
 
 # 检查当前学习课程
@@ -27,8 +27,6 @@ def getnowlearn():
     print res.text
     # 返回值是json，需要解码
     res_decoded = json.loads(str(res.text))
-    print ("## 课程名为："),
-    print res_decoded['data']['title']
     return res_decoded
 
 
@@ -50,8 +48,8 @@ def addlearnlog(res_decoded):
 
 # 微信推送server酱
 def wechat(res_decoded):
-    global key
-    url = str("https://sctapi.ftqq.com/" + key + ".send")
+    global sckey
+    url = str("https://sctapi.ftqq.com/" + sckey + ".send")
     kw = {
         'text': "青年大学习签到成功！",
         'desp': res_decoded['data']['title']
@@ -63,7 +61,9 @@ def wechat(res_decoded):
 # 主线引导与云函数入口
 def main_handler(event, context):
     res_decoded = getnowlearn()
-    if not res_decoded['data']['is_learn']:
+    if ((not res_decoded['data']['is_learn']) and (res_decoded['data']['do_starttime'] != "1970-01-01 08:00")):
+        print ("## 课程名为："),
+        print res_decoded['data']['title']
         return addlearnlog(res_decoded)
     else:
         print "## 无学习任务！"
