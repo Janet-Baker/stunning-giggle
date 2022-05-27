@@ -1,0 +1,6 @@
+id=adbd_tcpip
+name=EnableADBd
+version=1
+versionCode=1
+author=Me
+description=启动无线adb
