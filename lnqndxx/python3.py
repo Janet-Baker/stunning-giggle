@@ -14,8 +14,8 @@ head = {
     'Referer': 'http://websecond.lngqt.shechem.cn/study',
     'Accept-Language': 'zh-cn'
 }
-cookie = {'BDed_HeaderKey': 'C2YDAywMRQYDAWN4UBNiMS5Cfi9fJFByDHwIUDjQmNaBuN7W7fXQ7dE%3D'}
-SCKEY = "SCU89769T812774cc47f0ebf9d6514c862699bc5a5e6f4a6d40825"
+cookie = {'BDed_HeaderKey': ''}
+SCKEY = ""
 
 
 # 检查当前学习
